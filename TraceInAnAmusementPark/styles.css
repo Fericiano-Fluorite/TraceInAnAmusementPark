@@ -1,0 +1,32 @@
+.lineWrapper{
+	margin-top: 30px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	align-items: start;
+}
+
+.unhighlight{
+	opacity: 0.5;
+}
+
+.highlight{
+	opacity: 0.8;
+}
+
+#map-img{
+	position: absolute;
+	z-index: 0;
+	left: 30px;
+	opacity: 0.5;
+}
+
+#map-plots{
+	position: absolute;
+	z-index: 1;
+	left: 30px;
+}
+
+#side-view{
+	margin-left: 1050px;
+}
+
