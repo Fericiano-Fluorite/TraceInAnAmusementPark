@@ -8,12 +8,10 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <script src="https://d3js.org/d3.v5.js"></script>
+	<script src="https://d3js.org/d3-scale.v3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.js"></script>
-    <script src="https://d3js.org/d3-geo-projection.v2.js"></script>
-    <!-- <script src="js/info_box.js" async></script>
-    <script src="js/gap_plot.js" async></script>
     <script src="js/map.js" async></script>
-    <script src="js/script.js" async></script> -->
+    <script src="js/load.js" async></script>
 
     <style>
         h1 {text-align: center;}
@@ -28,9 +26,14 @@
         <p class="info">Name: Mingzhe Li, Rui Luo; E-Mail: u1320897@utah.edu, u0931966@utah.edu; UID: u1320897, u0931966</p>
     </div>
     <div class="wrapper">
-        <div class="innerWrapper">
-            <div id="map-chart" class="view"></div>
-            <div id="country-detail"></div>
+        <div class="lineWrapper">
+            <div id="map-chart" class="view"><img id="map-img" src="data/Park_Map.jpg" width="1000px"></img><svg id="map-plots"></svg></div>
+            <div id="side-view">
+				<svg>
+					<g id="side-view-yAxis"></g>
+					<g id="side-view-xAxis"></g>
+				</svg>
+			</div>
         </div>
 
         <div id="scatter-plot" class="view">
