@@ -13,6 +13,13 @@
 	opacity: 0.8;
 }
 
+.switchView{
+	width: 300px;
+	padding-left: 3em;
+	/* padding-top: 5em; */
+	float: left;
+}
+
 #map-img{
 	position: absolute;
 	z-index: 0;
