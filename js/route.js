@@ -111,13 +111,46 @@ class Route{
 					.on("click", d => this.mapClick(d));
 	}
 	
+	showRoute(d){
+
+	}
 	
 	mapClick(d){
 		if (this.selectionMode){
 			
 		}
 		else{
-			this.showLineChart(d);
+			this.showRoute(d);
 		}
 	}
 }
+
+function routeSwitchView(){
+	// let div = d3.selectAll(".wrapper").style("display","none");
+	if (d3.selectAll(".wrapper").style("display") == "block"){
+		let div = d3.selectAll(".wrapper").style("display","none");
+		// here should display the route view
+
+		
+	}
+	else if (d3.selectAll(".wrapper").style("display") == "none"){
+		let div = d3.selectAll(".wrapper").style("display","block");
+	}
+
+
+
+}
+
+async function changeData() {
+	//  Load the file indicated by the select menu
+	let dataFile = document.getElementById("route-dataset").value;
+
+	
+	try {
+		const data = await d3.csv("data/" + dataFile + ".csv");
+		drawMap();
+	} catch (error) {
+	  console.log(error)
+	  alert("Could not load the dataset!");
+	}
+  }

@@ -25,13 +25,21 @@
     <div class="header">
         <h1>Trace in an Amusement Park</h1>
         <p class="info">Name: Mingzhe Li, Rui Luo; E-Mail: u1320897@utah.edu, u0931966@utah.edu; UID: u1320897, u0931966</p>
+        
+        <span>
+            <button onclick="routeSwitchView()"> Switch view</button>
+        </span>
+    
+        <span>
+        <label>Dataset:</label>
+        <select id="route-dataset">
+            <option selected value="route-Fri-1591741">Friday data</option>
+            <option value="route-Sat">Saturday data</option>
+            <option value="route-Sun">Sunday data</option>
+        </select>
+        </span>
     </div>
 
-    <div class="routeView">
-        <label class="route-button-label">Switch view</label>
-        <input id="route-toggle-event" type="checkbox">
-    </div>
-    
     <div class="wrapper">
         <div class="lineWrapper">
             <div id="map-chart" class="view"><img id="map-img" src="data/Park_Map.jpg" width="1000px"></img><svg id="map-plots"></svg></div>
@@ -53,6 +61,12 @@
         <label class="route-button-label">Switch view</label>
         <input id="route-toggle-event" type="checkbox">
     </div> -->
+
+    <div class="routeView">
+
+    </div>
+
+
 </body>
 
 </html>
