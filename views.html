@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.js"></script>
     <script src="js/map.js" async></script>
     <script src="js/load.js" async></script>
+    <script src="js/route.js" async></script>
 
     <style>
         h1 {text-align: center;}
@@ -25,6 +26,12 @@
         <h1>Trace in an Amusement Park</h1>
         <p class="info">Name: Mingzhe Li, Rui Luo; E-Mail: u1320897@utah.edu, u0931966@utah.edu; UID: u1320897, u0931966</p>
     </div>
+
+    <div class="routeView">
+        <label class="route-button-label">Switch view</label>
+        <input id="route-toggle-event" type="checkbox">
+    </div>
+    
     <div class="wrapper">
         <div class="lineWrapper">
             <div id="map-chart" class="view"><img id="map-img" src="data/Park_Map.jpg" width="1000px"></img><svg id="map-plots"></svg></div>
@@ -42,10 +49,10 @@
 
     </div>
 
-    <div class="switchView">
-        <label class="button-label">Switch view</label>
-        <input id="toggle-event" type="checkbox" data-togle="toggle">
-    </div>
+    <!-- <div class="routeView">
+        <label class="route-button-label">Switch view</label>
+        <input id="route-toggle-event" type="checkbox">
+    </div> -->
 </body>
 
 </html>

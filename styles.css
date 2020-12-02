@@ -13,7 +13,7 @@
 	opacity: 0.8;
 }
 
-.switchView{
+.routeView{
 	width: 300px;
 	padding-left: 37em;
 	padding-top: 0em;
@@ -21,23 +21,12 @@
 	font-size: 20pt;
 }
 
-.toggle,
-.toggle-on,
-.toggle-off{
-	border-radius: 20px;
-	size: 10px;
-}
-
-.toggle .toggle-handle{
-	border-radius: 20px;
-}
-
-.switchView #toggle-event{
+.routeView #route-toggle-event{
 	/* font-size: 110%; */
 	transform: scale(3);
 }
 
-.switchView .button-label{
+.routeView .route-button-label{
 	font-size: 25pt;
 	padding-bottom: 2em;
 }
