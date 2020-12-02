@@ -13,6 +13,32 @@
 	opacity: 0.8;
 }
 
+.routeView{
+	width: 300px;
+	padding-left: 37em;
+	padding-top: 0em;
+	float: left;
+	font-size: 20pt;
+	position: absolute;
+	/* bottom: 0; */
+	left: 0;
+}
+
+.routeView #route-toggle-event{
+	/* font-size: 110%; */
+	transform: scale(3);
+}
+
+.routeView .route-button-label{
+	font-size: 15pt;
+	padding-bottom: 2em;
+}
+
+/* .routeView span:nth-of-type(1){
+	font-size: 15pt;
+	padding-bottom: 2em;
+} */
+
 #map-img{
 	position: absolute;
 	z-index: 0;
