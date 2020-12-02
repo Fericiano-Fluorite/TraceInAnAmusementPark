@@ -15,9 +15,31 @@
 
 .switchView{
 	width: 300px;
-	padding-left: 3em;
-	/* padding-top: 5em; */
+	padding-left: 37em;
+	padding-top: 0em;
 	float: left;
+	font-size: 20pt;
+}
+
+.toggle,
+.toggle-on,
+.toggle-off{
+	border-radius: 20px;
+	size: 10px;
+}
+
+.toggle .toggle-handle{
+	border-radius: 20px;
+}
+
+.switchView #toggle-event{
+	/* font-size: 110%; */
+	transform: scale(3);
+}
+
+.switchView .button-label{
+	font-size: 25pt;
+	padding-bottom: 2em;
 }
 
 #map-img{
