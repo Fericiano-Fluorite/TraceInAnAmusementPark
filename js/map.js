@@ -7,9 +7,12 @@ class Map{
 		this.svgHeight = 1000;
 		
 		this.minTiming = 480;
-		this.timing = 1000;
-		this.maxTiming = 1438;
+		this.maxTiming = 1430;
 		this.timingInterval = 10;
+		this.timingBar = d3.select("#timing-bar");
+		this.timing = this.timingBar.property("value");
+		
+		this.drawTiming();
 		
 		this.dates = ["Fri", "Sat", "Sun"];
 		this.activeDate = 0; // 0 - Fri, 1 - Sat, 2 - Sun
@@ -32,12 +35,12 @@ class Map{
 		this.typeToColors = {
 			"thrill": "red",
 			"kiddie": "yellow",
-			"everyone": "purple",
+			"everyone": "brown",
 			"show": "blue",
 			"info": "darkgreen",
 			"shop": "pink",
 			"beer": "gold",
-			"rest": "brown",
+			"rest": "purple",
 			"food": "slateblue",
 			"gate": "orange"
 		}
@@ -50,7 +53,7 @@ class Map{
 		
 		this.mapScaleColors = {}
 		for (let each in this.typeToColors)
-			this.mapScaleColors[each] = d3.scaleLinear().domain([0, 100]).range(["white", this.typeToColors[each]])
+			this.mapScaleColors[each] = d3.scaleLinear().domain([0, 150]).range(["white", this.typeToColors[each]])
 		
 		this.comparisonMode = d3.select("#selection-mode-switch")._groups[0][0].checked;
 		this.comparisonSwitch = d3.select("#selection-mode-switch");
@@ -62,15 +65,33 @@ class Map{
 		d3.selectAll(".tooltip").style("display", "none");
 	}
 	
+	drawTiming(){
+		let that = this;
+		
+		d3.select("#current-time").html(this.getStringFromTiming())
+		
+		this.timingBar.on("input", function(){
+			that.timing = that.timingBar.property("value")
+			that.drawMap()
+			d3.select("#current-time").html(that.getStringFromTiming())
+			that.showComparisonChart();
+		})
+	}
+	
 	changeDate(){
 		let date = this.dateSelection.property("value")
 		this.activeDate = this.dateIndex[date]
 		this.comparisonSelected.clear()
 		this.showComparisonChart()
 		this.circleSelection.classed("highlight", false).classed("unhighlight", true)
-		this.sideViewSelection.selectAll("path").remove()
+		
+		this.comparisonChoice.property("value", "default")
+		if (this.sideViewSelection != undefined)
+			this.sideViewSelection.selectAll("path").remove()
 		
 		this.drawMap()
+		if (this.comparisonMode)
+			this.showComparisonChart()
 	}
 	
 	changeSelection(d){
@@ -131,6 +152,10 @@ class Map{
 				.each(d => that.changeSelection(d))
 			that.showComparisonChart();
 		})
+		
+		this.dateSelection.on("change", function(){
+			that.changeDate();
+		})
 	}
 	
 	mergeData(data, info){
@@ -174,6 +199,11 @@ class Map{
 			t = this.timing;
 		let index = parseInt((t-480)/this.timingInterval);
 		return index;
+	}
+	
+	getTimingFromIndex(index){
+		let t = index * this.timingInterval + 480
+		return this.getStringFromTiming(t)
 	}
 	
 	drawMap(){
@@ -233,23 +263,27 @@ class Map{
 				}
 			}
 			
-			let tooltip = d3.selectAll(".tooltip");
+			let tooltip = d3.select("#map-tooltip");
 			
 			tooltip.style("margin-left", that.mapScaleX(d.x)+"px")
 				.style("margin-top", that.mapScaleY(100-d.y)+"px")
-				.style("height", "50px")
-				.style("width", "150px")
 				.transition()
 				.duration(200)
 				.style("opacity", 0.8)
 				.style("display", "");
-			tooltip.html("OKAY")
+			tooltip.html("Name: " + d.name + "<br/>" +
+						"ID: " + d.id + "<br/>" +
+						"Population: " + d.population[that.getIndexFromTiming()] + "<br/>" +
+						"Type: " + d.detail_type)
 			
 		})
 		.on("mouseout", function(d){
 			if (d3.select(this).classed("double-highlight")){
-				d3.select(this).classed("highlight", true)
-					.classed("double-highlight", false)
+				d3.select(this).classed("double-highlight", false)
+				if (d3.select(this).classed("unhighlight"))
+					d3.select(this).classed("highlight", false)
+				else
+					d3.select(this).classed("highlight", true)
 				if (that.comparisonSelection != undefined)
 						that.comparisonSelection.filter(d_ => d_ == d)
 							.classed("unhighlight", true).classed("highlight", false)
@@ -301,8 +335,7 @@ class Map{
 		let that = this;
 		let svg = d3.select("#comparison-chart").selectAll("svg");
 		svg.attr("width", 1460)
-			.attr("height", this.svgHeight)
-			.style("background-color", "#A0A0A0");
+			.attr("height", this.svgHeight);
 		let xAxis = d3.select("#comparison-view-xAxis");
 		let yAxis = d3.select("#comparison-view-yAxis");
 		
@@ -316,14 +349,15 @@ class Map{
 			return;
 		}
 		
+		
+		svg.style("background-color", "#A0A0A0");
+		
 		let maxX = -1
 		let maxY = -1
 		this.comparisonSelected.forEach((d, i) => {
 			maxX = Math.max(maxX, d.population.length)
 			maxY = Math.max(maxY, d3.max(d.population))
 		})
-		
-		console.log(this.comparisonSelected)
 		
 		let lineScaleX = d3.scaleLinear()
 							.domain([-5, maxX])
@@ -341,6 +375,21 @@ class Map{
 		let lineGenerator = d3.line()
 							.x((d, i) => lineScaleX(i) + 40)
 							.y(d => lineScaleY(d) + 40);
+					
+		let timingMark = [{"x": this.getIndexFromTiming(), "y": 0}, {"x": this.getIndexFromTiming(), "y": maxY}]
+		let markGenerator = d3.line()
+							.x(d => lineScaleX(d.x) + 40)
+							.y(d => lineScaleY(d.y) + 40);
+		svg.selectAll(".timing-mark")
+			.data([timingMark])
+			.join("path")
+			.classed("timing-mark", true)
+			.attr("fill", "none")
+			.attr("stroke", "white")
+			.attr("stroke-width", 1)
+			.attr("stroke-dasharray", "10,10")
+			.attr("d", d => markGenerator(d));
+		
 							
 		let lineGSelection = svg.selectAll(".path")
 			.data([...this.comparisonSelected])
@@ -359,13 +408,32 @@ class Map{
 				d3.select(this).classed("highlight", true).classed("unhighlight", false);
 				that.circleSelection.filter(d_ => d_ == d).classed("double-highlight", true)
 					.classed("highlight", false)
+				
+				let mouse_X = d3.mouse(this)[0]
+				let mouse_Y = d3.mouse(this)[1]
+				let x_invert = Math.round(lineScaleX.invert(mouse_X - 40))
+				let tooltip = d3.select("#comparison-tooltip");
+			
+				tooltip.style("margin-left", mouse_X+"px")
+					.style("margin-top", mouse_Y+"px")
+					.transition()
+					.duration(200)
+					.style("opacity", 0.8)
+					.style("display", "");
+				tooltip.html("Name: " + d.name + "<br/>" +
+							"ID: " + d.id + "<br/>" +
+							"Time: " + that.getTimingFromIndex(x_invert) + "<br/>" +
+							"Population: " + d.population[x_invert] + "<br/>" +
+							"Type: " + d.detail_type)
 			})
 			.on("mouseout", function(d){
 				d3.select(this).classed("highlight", false).classed("unhighlight", true);
 				that.circleSelection.filter(d_ => d_ == d).classed("double-highlight", false)
 					.classed("highlight", true)
+				d3.selectAll(".tooltip")
+				.style("opacity", 0);
 			});
-			
+		
 	}
 	
 	mapClick(d){

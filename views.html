@@ -9,15 +9,16 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <script src="https://d3js.org/d3.v5.js"></script>
 	<script src="https://d3js.org/d3-scale.v3.min.js"></script>
+	<script src="https://d3js.org/d3-color.v2.min.js"></script>
+	<script src="https://d3js.org/d3-interpolate.v2.min.js"></script>
+	<script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.js"></script>
     <script src="js/map.js" async></script>
     <script src="js/load.js" async></script>
-    <script src="js/route.js" async></script>
 
     <style>
         h1 {text-align: center;}
         p {text-align: center;}
-        div {text-align: center;}
     </style>
 </head>
 
@@ -25,24 +26,30 @@
     <div class="header">
         <h1>Trace in an Amusement Park</h1>
         <p class="info">Name: Mingzhe Li, Rui Luo; E-Mail: u1320897@utah.edu, u0931966@utah.edu; UID: u1320897, u0931966</p>
-        
-        <span>
+		
+		<span>
             <button onclick="routeSwitchView()"> Switch view</button>
         </span>
     
-        <span>
-        <label>Dataset:</label>
+        <span style="margin-left:20px">
+        <label>Date:</label>
         <select id="route-dataset">
-            <option selected value="route-Fri-1591741">Friday data</option>
-            <option value="route-Sat">Saturday data</option>
-            <option value="route-Sun">Sunday data</option>
+            <option selected value="Fri">Friday</option>
+            <option value="Sat">Saturday</option>
+            <option value="Sun">Sunday</option>
         </select>
         </span>
+		
+		<span style="margin-left:20px">
+        <label>Current Time:</label><span id="current-time" style="margin-left: 5px"></span>
+        </span>
     </div>
-
     <div class="wrapper">
+		<div class="slidecontainer">
+		  <input type="range" min="480" max="1430" value="480" step="10" class="slider" id="timing-bar">
+		</div>
         <div class="lineWrapper">
-            <div id="map-chart" class="view"><img id="map-img" src="data/Park_Map.jpg" width="1000px"></img><svg id="map-plots"></svg></div>
+            <div id="map-chart" class="view"><img id="map-img" src="data/Park_Map.jpg" width="1000px"></img><div class="tooltip" id="map-tooltip"></div><svg id="map-plots"></svg></div>
             <div id="side-view">
 				<svg>
 					<g id="side-view-yAxis"></g>
@@ -51,13 +58,44 @@
 			</div>
         </div>
 
-        <div id="scatter-plot" class="view">
-
+        <div id="comparison-view" >
+			<div style="margin-top: 30px" id="switches">
+				<span> Comparison Mode 
+					<label class="switch">
+					  <input type="checkbox" id="selection-mode-switch">
+					  <span class="slider round"></span>
+					</label>
+				</span>
+				
+				<span style="margin-left: 40px">
+					<label>Comparison Choice</label>
+					<select id="comp-choice">
+						<option value="default">Default</option>
+						<option value="thrill">Thrill rides</option>
+						<option value="kiddie">Kiddie Rides</option>
+						<option value="everyone">Rides for Everyone</option>
+						<option value="show">Shows and Entertainment</option>
+						<option value="info">Information and Assistance</option>
+						<option value="shop">Shopping</option>
+						<option value="beer">Beer Gardens</option>
+						<option value="rest">Restrooms</option>
+						<option value="food">Food</option>
+					</select>
+				</span>
+			</div>
+			<br/>
+			<div id="comparison-chart">
+				<div class="tooltip" id="comparison-tooltip"></div>
+				<svg>
+					<g id="comparison-view-yAxis"></g>
+					<g id="comparison-view-xAxis"></g>
+				</svg>
+			</div>
         </div>
 
     </div>
-
-    <!-- <div class="routeView">
+	
+	<!-- <div class="routeView">
         <label class="route-button-label">Switch view</label>
         <input id="route-toggle-event" type="checkbox">
     </div> -->
@@ -65,8 +103,6 @@
     <div class="routeView">
 
     </div>
-
-
 </body>
 
 </html>
