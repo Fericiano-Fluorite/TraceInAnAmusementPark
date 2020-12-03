@@ -5,7 +5,7 @@ import json
 
 picked_id = 1591741
 movement_input_file = 'park-movement-Fri.csv'
-route_output_file = 'route-Fri-' + str(picked_id) + '.csv'
+route_output_file = 'route-' + str(picked_id) + '.csv'
 movement = pd.read_csv(movement_input_file, header=0)
 
 print(movement)

@@ -44,6 +44,8 @@ rides = {}
 with open(rides_input_file, "r") as file:
     for i in file:
         a = i.split(",")
+        if a[0] == "x":
+            continue
         pos = (int(a[0]), int(a[1]))
         rides[pos] = {'type': a[2], 'id': a[3].strip(), 'population': []}
 
@@ -55,7 +57,7 @@ def next_time_calc(cur):
     tmp = time.split(":")
     hr = int(tmp[0])
     mn = int(tmp[1])
-    mn += 2
+    mn += 10
     if mn >= 60:
         mn -= 60
         hr += 1
