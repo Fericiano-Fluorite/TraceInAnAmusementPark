@@ -32,7 +32,7 @@
             <button onclick="routeSwitchView()"> Switch view</button>
         </span>
     
-        <span style="margin-left:20px">
+        <span style="margin-left:20px" id="date-span">
         <label>Date:</label>
         <select id="route-dataset">
             <option selected value="Fri">Friday</option>
@@ -41,16 +41,16 @@
         </select>
         </span>
 		
-		<span style="margin-left:20px">
+		<span style="margin-left:20px" id="time-span">
         <label>Current Time:</label><span id="current-time" style="margin-left: 5px"></span>
         </span>
     </div>
-    <div class="wrapper">
+    <div class="wrapper" id="main-view">
 		<div class="slidecontainer">
 		  <input type="range" min="480" max="1430" value="480" step="10" class="slider" id="timing-bar">
 		</div>
         <div class="lineWrapper">
-            <div id="map-chart" class="view"><img id="map-img" src="data/Park_Map.jpg" width="1000px"></img><div class="tooltip" id="map-tooltip"></div><svg id="map-plots"></svg></div>
+            <div id="map-chart" class="map-chart"><img id="map-img" src="data/Park_Map.jpg" width="1000px"></img><div class="tooltip" id="map-tooltip"></div><svg id="map-plots"></svg></div>
             <div id="side-view">
 				<svg>
 					<g id="side-view-yAxis"></g>
@@ -102,8 +102,14 @@
         <input id="route-toggle-event" type="checkbox">
     </div> -->
 
-    <div class="routeView">
-
+    <div id="route-view" style="display:none">
+		<div class="lineWrapper">
+            <div class="map-view"><img id="route-map-img" src="data/Park_Map.jpg" width="1000px"></img><svg id="#route-map-plots"></svg></div>
+            <div id="pie-view">
+				<svg>
+				</svg>
+			</div>
+        </div>
     </div>
 </body>
 

@@ -4,7 +4,8 @@
 
 class Route{
 	constructor(data, info){
-		this.data = this.mergeData(data, info);
+		this.data = data;
+		this.info = info;
 		console.log(this.data);
 		
 		this.svgWidth = 1000;
@@ -190,21 +191,20 @@ function showPieChart(){
 }
 
 function routeSwitchView(){
-	// let div = d3.selectAll(".wrapper").style("display","none");
-	if (d3.selectAll(".wrapper").style("display") == "block"){
-		let div = d3.selectAll(".wrapper").style("display","none");
-		// here should display the route view
+	let mainActive = d3.select("#main-view").style("display")
 
-		console.log("should see pie");
-		// showPieChart();
-		// this.drawMap();
-
+	if (mainActive != "none"){
+		d3.select("#main-view").style("display", "none")
+		d3.select("#date-span").style("display", "none")
+		d3.select("#time-span").style("display", "none")
+		d3.select("#route-view").style("display", "")
 	}
-	else if (d3.selectAll(".wrapper").style("display") == "none"){
-		let div = d3.selectAll(".wrapper").style("display","block");
+	else{
+		d3.select("#main-view").style("display", "")
+		d3.select("#date-span").style("display", "")
+		d3.select("#time-span").style("display", "")
+		d3.select("#route-view").style("display", "none")
 	}
-
-
 
 }
 
