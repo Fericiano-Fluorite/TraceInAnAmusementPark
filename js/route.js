@@ -4,7 +4,8 @@
 
 class Route{
 	constructor(data, info){
-		this.data = this.mergeData(data, info);
+		this.data = data;
+		this.info = info;
 		console.log(this.data);
 		
 		this.svgWidth = 1000;
@@ -194,6 +195,7 @@ class Route{
 
 
 function routeSwitchView(){
+<<<<<<< HEAD
 	// let div = d3.selectAll(".wrapper").style("display","none");
 	if (d3.selectAll(".wrapper").style("display") == "block"){
 		let div = d3.selectAll(".wrapper").style("display","none");
@@ -201,13 +203,22 @@ function routeSwitchView(){
 
 		console.log("should see pie");
 
+=======
+	let mainActive = d3.select("#main-view").style("display")
+>>>>>>> d6bd4e8f1e60efc99181d6ebecb9dcdda3856f82
 
+	if (mainActive != "none"){
+		d3.select("#main-view").style("display", "none")
+		d3.select("#date-span").style("display", "none")
+		d3.select("#time-span").style("display", "none")
+		d3.select("#route-view").style("display", "")
 	}
-	else if (d3.selectAll(".wrapper").style("display") == "none"){
-		let div = d3.selectAll(".wrapper").style("display","block");
+	else{
+		d3.select("#main-view").style("display", "")
+		d3.select("#date-span").style("display", "")
+		d3.select("#time-span").style("display", "")
+		d3.select("#route-view").style("display", "none")
 	}
-
-
 
 }
 

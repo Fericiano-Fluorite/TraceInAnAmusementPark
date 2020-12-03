@@ -194,24 +194,4 @@ input.slider::-webkit-slider-thumb {
   cursor: pointer;
 }
 
-.routeView{
-	width: 300px;
-	padding-left: 37em;
-	padding-top: 0em;
-	float: left;
-	font-size: 20pt;
-	position: absolute;
-	/* bottom: 0; */
-	left: 0;
-}
-
-.routeView #route-toggle-event{
-	/* font-size: 110%; */
-	transform: scale(3);
-}
-
-.routeView .route-button-label{
-	font-size: 15pt;
-	padding-bottom: 2em;
-}
 
