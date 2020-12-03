@@ -17,4 +17,5 @@ Promise.all([data_fri, data_sat, data_sun, ride_name, rides]).then( data => {
 
 	let route = new Route(movement, rides);
 	route.drawMap();
+	route.showPieChart();
 });
