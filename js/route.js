@@ -125,7 +125,7 @@ class Route{
 		let hs = parseFloat(ts.split(":")[0])
 		let ms = parseFloat(ts.split(":")[1])
 		let ss = parseFloat(ts.split(":")[2])
-		
+		// console.log(s+ " " + hs*60+ms+ss/60)
 		return hs*60+ms+ss/60
 	}
 	
@@ -176,9 +176,11 @@ class Route{
 
 		let data_pie = []
 		let sum_pie = 0
+		let st = ""
 		for (let each in this.stayTime){
 			data_pie.push({"key": each, "value": parseInt(this.stayTime[each])})
 			sum_pie += parseInt(this.stayTime[each])
+			st += each+": " +parseInt(this.stayTime[each])+ " minutes <br/>"
 		}
 		console.log(data_pie)
 		
@@ -239,6 +241,11 @@ class Route{
 			.style("text-anchor", "middle")
 			.attr("font-size", "12px")
 			.attr("font-weight", "bold");
+		
+		
+		d3.select("#pie-text").html(
+			st
+		);
 	
 	}
 	
