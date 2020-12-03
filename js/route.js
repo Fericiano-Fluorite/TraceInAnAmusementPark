@@ -8,6 +8,7 @@ class Route{
 		this.data = data;
 		this.info = info;
 		console.log(this.data);
+		console.log(this.info);
 		
 		this.svgWidth = 1000;
 		this.svgHeight = 1000;
@@ -27,19 +28,16 @@ class Route{
 		this.routeChoice = d3.select("#route-choice")
 		this.routeChoice.on("change", function(d){
 			that.activeRoute = that.dateIndex[that.routeChoice.property("value")]
+			that.countTime();
 			that.drawRoute();
+			that.showPieChart();
 		})
 		
 		this.playButton = d3.select("#onplay-button")
 		this.playButton.on("click", function(){
 			if (that.routeSelection != undefined){
 				let LineTotalLength = that.routeSelection.node().getTotalLength();
-				// console.log(that.routeSelection.attr("d"))
-				that.routeSvg.append("circle")
-					.attr("r", 7)
-					.attr("id", "marker")
-					.attr("fill", "black")
-					//.attr("transform", "translate(" + that.routeSelection.attr("d").split(" ")[1] + ")");
+				
 					
 				that.routeSelection
 					.attr("stroke-dasharray", LineTotalLength)
@@ -48,7 +46,6 @@ class Route{
 					.duration(30000)
 					.attr("stroke-dashoffset", 0);
 				
-				d3.select("#marker").remove();
 			}
 		})
 		
@@ -61,6 +58,7 @@ class Route{
 							.range([0, 992.3]);
 		
 		this.types = ["thrill", "kiddie", "everyone", "show", "info", "shop", "beer", "rest", "food", "gate"]
+		
 		this.typeToColors = {
 			"thrill": "red",
 			"kiddie": "yellow",
@@ -72,6 +70,37 @@ class Route{
 			"rest": "purple",
 			"food": "slateblue",
 			"gate": "orange"
+		}
+		
+		this.countTime();
+	}
+	
+	countTime(){
+		this.stayTime = {
+			"thrill": 0.0,
+			"kiddie": 0.0,
+			"everyone": 0.0,
+			"show": 0.0,
+			"info": 0.0,
+			"shop": 0.0,
+			"beer": 0.0,
+			"rest": 0.0,
+			"food": 0.0,
+			"gate": 0.0
+		}
+		
+		let data_toShow = Array.from(this.data[this.activeRoute]);
+		let len_data = data_toShow.length
+		for (let i=0; i<len_data-1; i++){
+			let obj = data_toShow[i];
+			let t = this.getTimingFromString(obj.Timestamp)
+			let t_next = this.getTimingFromString(data_toShow[i+1].Timestamp)
+			for (let j of this.info){
+				if (j.x == obj.X && j.y == obj.Y){
+					this.stayTime[j.type] += t_next - t;
+					break;
+				}
+			}
 		}
 	}
 	
@@ -89,6 +118,15 @@ class Route{
 		let hs = (Array(length).join('0') + h).slice(-length);
 		let ms = (Array(length).join('0') + m).slice(-length);
 		return hs + ":" + ms;
+	}
+	
+	getTimingFromString(s){
+		let ts = s.split(" ")[1]
+		let hs = parseFloat(ts.split(":")[0])
+		let ms = parseFloat(ts.split(":")[1])
+		let ss = parseFloat(ts.split(":")[2])
+		
+		return hs*60+ms+ss/60
 	}
 	
 	getIndexFromTiming(t = null){
@@ -125,74 +163,87 @@ class Route{
 		
 	}
 	
-}
+	showPieChart(){
+		let width = 800;
+		let height = 400;
+		let radius = Math.min(width, height) / 2 - 10;
 
-function showPieChart(){
-	let width = 800;
-	let height = 400;
-	let radius = Math.min(width, height) / 2 - 10;
+		let svg = d3.select("#pie-view").select("svg")
+			.attr("width", width)
+			.attr("height", height)
+			.append("g")
+			.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-	let svg = d3.select("svg")
-		.attr("width", width)
-		.attr("height", height)
-		.append("g")
-		.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+		let data_pie = []
+		let sum_pie = 0
+		for (let each in this.stayTime){
+			data_pie.push({"key": each, "value": parseInt(this.stayTime[each])})
+			sum_pie += parseInt(this.stayTime[each])
+		}
+		console.log(data_pie)
+		
+		// This creates a pie layout generator; if you give it a data set, it will
+		// figure out the needed angles in order to draw a pie
+		let pie = d3.pie();
+
+		// Here we tell the pie generator which attribute
+		// of the object to use for the layout
+		pie.value(function (d) {
+			return d.value;
+		});
 
 
-	// This creates a pie layout generator; if you give it a data set, it will
-	// figure out the needed angles in order to draw a pie
-	let pie = d3.pie();
+		// Now that we've set up our generator, let's give it our data:
+		let pieData = pie(data_pie);
+		// We'll log it to the console to see how it transformed the data:
+		console.log('pieData:', pieData);
 
-	// Here we tell the pie generator which attribute
-	// of the object to use for the layout
-	pie.value(function (d) {
-		return d.type;
-	});
+		// To make SVG pie slices, we still need more information - for that,
+		// we'll create an arc generator, that takes the computed pie data, and
+		// produces SVG path strings
+		let arc = d3.arc();
 
+		// Let's tell it how large we want it
+		arc.outerRadius(radius);
+		// We also need to give it an inner radius...
+		arc.innerRadius(0);
 
-	// Now that we've set up our generator, let's give it our data:
-	let pieData = pie(this.data);
-	// We'll log it to the console to see how it transformed the data:
-	console.log('pieData:', pieData);
+		// Let's test the arc generator, by giving it the first pie slice:
+		console.log('first arc:', arc(pieData[0]));
 
-	// To make SVG pie slices, we still need more information - for that,
-	// we'll create an arc generator, that takes the computed pie data, and
-	// produces SVG path strings
-	let arc = d3.arc();
+		// With the pie data generator, and the arc path generator, we're
+		// finally ready to start drawing!
 
-	// Let's tell it how large we want it
-	arc.outerRadius(radius);
-	// We also need to give it an inner radius...
-	arc.innerRadius(0);
+		// We'll want a path and a text label for each slice, so first, we'll
+		// create a group element:
+		let groups = svg.selectAll("g").data(pieData)
+			.enter()
+			.append("g");
 
-	// Let's test the arc generator, by giving it the first pie slice:
-	console.log('first arc:', arc(pieData[0]));
+		// Add the path, and use the arc generator to convert the pie data to
+		// an SVG shape
+		groups.selectAll("path")
+			.data(d => [d])
+			.join("path")
+			.attr("d", arc)
+			// While we're at it, let's set the color of the slice using our color scale
+			.attr("fill", d => this.typeToColors[d.data.key]);
 
-	// With the pie data generator, and the arc path generator, we're
-	// finally ready to start drawing!
-
-	// We'll want a path and a text label for each slice, so first, we'll
-	// create a group element:
-	let groups = svg.selectAll("g").data(pieData)
-		.enter()
-		.append("g");
-
-	// Add the path, and use the arc generator to convert the pie data to
-	// an SVG shape
-	groups.append("path")
-		.attr("d", arc)
-		// While we're at it, let's set the color of the slice using our color scale
-		.style("fill", d => this.typeToColors(d.data.types));
-
-	// add a label
-	groups.append("text")
-		.text(d => d.data.types)
-		.attr("transform", d => "translate(" + arc.centroid(d) + ")")
-		.attr("dy", ".35em")
-		.style("text-anchor", "middle")
-		.style("font-size", "10px");
+		// add a label
+		groups.selectAll("text")
+			.data(d => [d])
+			.join("text")
+			.text(d => d.value*75>sum_pie?d.data.key:"")
+			.attr("transform", d => "translate(" + arc.centroid(d) + ")")
+			.attr("dy", ".35em")
+			.style("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.attr("font-weight", "bold");
+	
+	}
 	
 }
+
 
 function routeSwitchView(){
 	let mainActive = d3.select("#main-view").style("display")
