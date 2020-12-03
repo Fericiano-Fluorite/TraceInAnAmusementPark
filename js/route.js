@@ -265,19 +265,5 @@ function routeSwitchView(){
 
 }
 
-// async function changeData() {
-// 	//  Load the file indicated by the select menu
-// 	let dataFile = document.getElementById("route-dataset").value;
-
-	
-// 	try {
-// 		const data = await d3.csv("data/" + dataFile + ".csv");
-// 		drawMap();
-// 	} catch (error) {
-// 	  console.log(error)
-// 	  alert("Could not load the dataset!");
-// 	}
-//   }
-
 
   
