@@ -131,7 +131,7 @@ function routeSwitchView(){
 		let div = d3.selectAll(".wrapper").style("display","none");
 		// here should display the route view
 
-		
+
 	}
 	else if (d3.selectAll(".wrapper").style("display") == "none"){
 		let div = d3.selectAll(".wrapper").style("display","block");
@@ -154,3 +154,6 @@ async function changeData() {
 	  alert("Could not load the dataset!");
 	}
   }
+
+
+  
