@@ -35,6 +35,20 @@ class Route{
 								.range([0, 40])
 		
 		this.selectionMode = false;
+
+		this.types = ["thrill", "kiddie", "everyone", "show", "info", "shop", "beer", "rest", "food", "gate"]
+		this.typeToColors = {
+			"thrill": "red",
+			"kiddie": "yellow",
+			"everyone": "brown",
+			"show": "blue",
+			"info": "darkgreen",
+			"shop": "pink",
+			"beer": "gold",
+			"rest": "purple",
+			"food": "slateblue",
+			"gate": "orange"
+		}
 	}
 	
 	mergeData(data, info){
@@ -81,8 +95,8 @@ class Route{
 	}
 	
 	drawMap(){
-		let timeIndex = this.getIndexFromTiming();
-		let svg = d3.select("#map-plots");
+		let that = this;
+		let svg = d3.select("#route-map-plots");
 		svg.attr("width", this.svgWidth)
 			.attr("height", this.svgHeight);
 		
@@ -91,38 +105,88 @@ class Route{
 			.data(data_toShow)
 			.join("g")
 			.attr("transform", d => "translate("+this.mapScaleX(d.x)+","+this.mapScaleY(100-d.y)+")");
-		
-		g_selection.selectAll("circle")
-					.data(d => [d])
-					.join("circle")
-					.attr("r", d => this.mapScaleCircle(d.population[timeIndex]))
-					.attr("fill", "green")
-					.classed("unhighlight", true)
-					.classed("highlight", false)
-					.on("click", d => this.mapClick(d));
-		
-		g_selection.selectAll("rect")
-					.data(d => [d])
-					.join("rect")
-					.attr("width", 4)
-					.attr("height", 4)
-					.attr("fill", "white")
-					.attr("transform", "translate(-2,-2)")
-					.on("click", d => this.mapClick(d));
-	}
-	
-	showRoute(d){
-
-	}
-	
-	mapClick(d){
-		if (this.selectionMode){
 			
-		}
-		else{
-			this.showRoute(d);
-		}
+		// let aLineTotalLength = aLineChart.node().getTotalLength();
+
+		// aLineChart
+		// .attr("stroke-dasharray", aLineTotalLength)
+		// .attr("stroke-dashoffset", aLineTotalLength)
+		// .transition()
+		// .duration(1000)
+		// .attr("stroke-dashoffset", 0);
+		
+	
+	
+		
 	}
+	
+}
+
+function showPieChart(){
+	let width = 800;
+	let height = 400;
+	let radius = Math.min(width, height) / 2 - 10;
+
+	let svg = d3.select("svg")
+		.attr("width", width)
+		.attr("height", height)
+		.append("g")
+		.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+	// This creates a pie layout generator; if you give it a data set, it will
+	// figure out the needed angles in order to draw a pie
+	let pie = d3.pie();
+
+	// Here we tell the pie generator which attribute
+	// of the object to use for the layout
+	pie.value(function (d) {
+		return d.type;
+	});
+
+
+	// Now that we've set up our generator, let's give it our data:
+	let pieData = pie(this.data);
+	// We'll log it to the console to see how it transformed the data:
+	console.log('pieData:', pieData);
+
+	// To make SVG pie slices, we still need more information - for that,
+	// we'll create an arc generator, that takes the computed pie data, and
+	// produces SVG path strings
+	let arc = d3.arc();
+
+	// Let's tell it how large we want it
+	arc.outerRadius(radius);
+	// We also need to give it an inner radius...
+	arc.innerRadius(0);
+
+	// Let's test the arc generator, by giving it the first pie slice:
+	console.log('first arc:', arc(pieData[0]));
+
+	// With the pie data generator, and the arc path generator, we're
+	// finally ready to start drawing!
+
+	// We'll want a path and a text label for each slice, so first, we'll
+	// create a group element:
+	let groups = svg.selectAll("g").data(pieData)
+		.enter()
+		.append("g");
+
+	// Add the path, and use the arc generator to convert the pie data to
+	// an SVG shape
+	groups.append("path")
+		.attr("d", arc)
+		// While we're at it, let's set the color of the slice using our color scale
+		.style("fill", d => this.typeToColors(d.data.types));
+
+	// add a label
+	groups.append("text")
+		.text(d => d.data.types)
+		.attr("transform", d => "translate(" + arc.centroid(d) + ")")
+		.attr("dy", ".35em")
+		.style("text-anchor", "middle")
+		.style("font-size", "10px");
+	
 }
 
 function routeSwitchView(){
@@ -131,6 +195,9 @@ function routeSwitchView(){
 		let div = d3.selectAll(".wrapper").style("display","none");
 		// here should display the route view
 
+		console.log("should see pie");
+		showPieChart();
+		// drawMap();
 
 	}
 	else if (d3.selectAll(".wrapper").style("display") == "none"){

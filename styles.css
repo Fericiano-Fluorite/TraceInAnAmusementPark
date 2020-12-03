@@ -147,6 +147,19 @@ div.tooltip {
 	left: 30px;
 }
 
+#route-map-img{
+	position: absolute;
+	z-index: 0;
+	left: 30px;
+	opacity: 0.5;
+}
+
+#route-map-plots{
+	position: absolute;
+	z-index: 1;
+	left: 30px;
+}
+
 #side-view{
 	margin-left: 1050px;
 }
