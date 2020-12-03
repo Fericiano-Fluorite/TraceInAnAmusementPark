@@ -196,8 +196,8 @@ function routeSwitchView(){
 		// here should display the route view
 
 		console.log("should see pie");
-		showPieChart();
-		// drawMap();
+		// showPieChart();
+		// this.drawMap();
 
 	}
 	else if (d3.selectAll(".wrapper").style("display") == "none"){
@@ -208,19 +208,19 @@ function routeSwitchView(){
 
 }
 
-async function changeData() {
-	//  Load the file indicated by the select menu
-	let dataFile = document.getElementById("route-dataset").value;
+// async function changeData() {
+// 	//  Load the file indicated by the select menu
+// 	let dataFile = document.getElementById("route-dataset").value;
 
 	
-	try {
-		const data = await d3.csv("data/" + dataFile + ".csv");
-		drawMap();
-	} catch (error) {
-	  console.log(error)
-	  alert("Could not load the dataset!");
-	}
-  }
+// 	try {
+// 		const data = await d3.csv("data/" + dataFile + ".csv");
+// 		drawMap();
+// 	} catch (error) {
+// 	  console.log(error)
+// 	  alert("Could not load the dataset!");
+// 	}
+//   }
 
 
   

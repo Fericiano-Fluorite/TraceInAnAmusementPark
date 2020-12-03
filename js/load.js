@@ -14,4 +14,7 @@ Promise.all([data_fri, data_sat, data_sun, ride_name, rides]).then( data => {
 	
 	let map = new Map(movement, rides[1]);
 	map.drawMap();
+
+	let route = new Route(movement, rides);
+	route.drawMap();
 });
