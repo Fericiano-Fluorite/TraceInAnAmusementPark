@@ -44,6 +44,10 @@
 		<span style="margin-left:20px" id="time-span">
         <label>Current Time:</label><span id="current-time" style="margin-left: 5px"></span>
         </span>
+		
+		<span style="margin-left:20px; display:none" id="play-span">
+            <button id="onplay-button">Play</button>
+        </span>
     </div>
     <div class="wrapper" id="main-view">
 		<div class="slidecontainer">
@@ -103,8 +107,16 @@
     </div> -->
 
     <div id="route-view" style="display:none">
+		<span style="top: 40px">
+					<label>Route Choice</label>
+					<select id="route-choice">
+						<option value="Route_1">Route 1</option>
+						<option value="Route_2">Route 2</option>
+						<option value="Route_3">Route 3</option>
+					</select>
+		</span>
 		<div class="lineWrapper">
-            <div class="map-view"><img id="route-map-img" src="data/Park_Map.jpg" width="1000px"></img><svg id="#route-map-plots"></svg></div>
+            <div class="map-view"><img id="route-map-img" src="data/Park_Map.jpg" width="1000px"></img><svg id="route-map-plots"></svg></div>
             <div id="pie-view">
 				<svg id="#pie-chart-plots"></svg>
 			</div>

@@ -25,4 +25,5 @@ Promise.all([data_fri, data_sat, data_sun, ride_name, rides,
 	// route.drawMap();
 
 	route.showPieChart();
+	route.drawRoute();
 });
