@@ -16,13 +16,19 @@ class Route{
 		this.timing = 1000;
 		this.maxTiming = 1438;
 		
-		this.routes = ["Route 1", "Route 2", "Route 3"];
+		this.routes = ["Route_1", "Route_2", "Route_3"];
 		this.activeRoute = 0; // 0 - Fri, 1 - Sat, 2 - Sun
 		this.dateIndex = {
-			"Route 1": 0,
-			"Route 2": 1,
-			"Route 3": 2
+			"Route_1": 0,
+			"Route_2": 1,
+			"Route_3": 2
 		}
+		
+		this.routeChoice = d3.select("#route-choice")
+		this.routeChoice.on("change", function(d){
+			that.activeRoute = that.dateIndex[that.routeChoice.property("value")]
+			that.drawRoute();
+		})
 		
 		this.playButton = d3.select("#onplay-button")
 		this.playButton.on("click", function(){
