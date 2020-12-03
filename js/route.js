@@ -4,6 +4,7 @@
 
 class Route{
 	constructor(data, info){
+		let that = this;
 		this.data = data;
 		this.info = info;
 		console.log(this.data);
@@ -15,13 +16,35 @@ class Route{
 		this.timing = 1000;
 		this.maxTiming = 1438;
 		
-		this.dates = ["Fri", "Sat", "Sun"];
-		this.activeDate = 0; // 0 - Fri, 1 - Sat, 2 - Sun
+		this.routes = ["Route 1", "Route 2", "Route 3"];
+		this.activeRoute = 0; // 0 - Fri, 1 - Sat, 2 - Sun
 		this.dateIndex = {
-			"Fri": 0,
-			"Sat": 1,
-			"Sun": 2
+			"Route 1": 0,
+			"Route 2": 1,
+			"Route 3": 2
 		}
+		
+		this.playButton = d3.select("#onplay-button")
+		this.playButton.on("click", function(){
+			if (that.routeSelection != undefined){
+				let LineTotalLength = that.routeSelection.node().getTotalLength();
+				// console.log(that.routeSelection.attr("d"))
+				that.routeSvg.append("circle")
+					.attr("r", 7)
+					.attr("id", "marker")
+					.attr("fill", "black")
+					//.attr("transform", "translate(" + that.routeSelection.attr("d").split(" ")[1] + ")");
+					
+				that.routeSelection
+					.attr("stroke-dasharray", LineTotalLength)
+					.attr("stroke-dashoffset", LineTotalLength)
+					.transition()
+					.duration(30000)
+					.attr("stroke-dashoffset", 0);
+				
+				d3.select("#marker").remove();
+			}
+		})
 		
 		this.mapScaleX = d3.scaleLinear()
 							.domain([0, 100])
@@ -31,12 +54,6 @@ class Route{
 							.domain([0, 100])
 							.range([0, 992.3]);
 		
-		this.mapScaleCircle = d3.scaleRadial()
-								.domain([0, 100])
-								.range([0, 40])
-		
-		this.selectionMode = false;
-
 		this.types = ["thrill", "kiddie", "everyone", "show", "info", "shop", "beer", "rest", "food", "gate"]
 		this.typeToColors = {
 			"thrill": "red",
@@ -50,22 +67,6 @@ class Route{
 			"food": "slateblue",
 			"gate": "orange"
 		}
-	}
-	
-	mergeData(data, info){
-		for (let data_i of data)
-		for (let each of data_i){
-			let x = each.x;
-			let y = each.y;
-			for (let obj of info)
-				if (x == obj.x && y == obj.y){
-					for (let key in obj)
-						if (!(key in each))
-							each[key] = obj[key];
-					break;
-				}
-		}
-		return data;
 	}
 	
 	getStringFromTiming(t = null){
@@ -95,29 +96,26 @@ class Route{
 		return index;
 	}
 	
-	drawMap(){
+	drawRoute(){
 		let that = this;
-		let svg = d3.select("#route-map-plots");
-		svg.attr("width", this.svgWidth)
+		this.routeSvg = d3.select("#route-map-plots");
+		this.routeSvg.attr("width", this.svgWidth)
 			.attr("height", this.svgHeight);
 		
-		let data_toShow = this.data[this.activeDate];
-		let g_selection = svg.selectAll("g")
-			.data(data_toShow)
-			.join("g")
-			.attr("transform", d => "translate("+this.mapScaleX(d.x)+","+this.mapScaleY(100-d.y)+")");
-			
-		// let aLineTotalLength = aLineChart.node().getTotalLength();
-
-		// aLineChart
-		// .attr("stroke-dasharray", aLineTotalLength)
-		// .attr("stroke-dashoffset", aLineTotalLength)
-		// .transition()
-		// .duration(1000)
-		// .attr("stroke-dashoffset", 0);
+		let data_toShow = Array.from(this.data[this.activeRoute]);
 		
-	
-	
+		let lineGenerator = d3.line()
+							.x(d => that.mapScaleX(parseInt(d.X)))
+							.y(d => that.mapScaleY(100-parseInt(d.Y)))
+							
+		this.routeSelection = this.routeSvg.selectAll("path")
+			.data([data_toShow])
+			.join("path")
+			.attr("d", d => lineGenerator(d))
+			.attr("stroke", "red")
+			.attr("fill", "none")
+			.attr("stroke-width", 2)
+		
 		
 	}
 	
@@ -198,12 +196,14 @@ function routeSwitchView(){
 		d3.select("#date-span").style("display", "none")
 		d3.select("#time-span").style("display", "none")
 		d3.select("#route-view").style("display", "")
+		d3.select("#play-span").style("display", "")
 	}
 	else{
 		d3.select("#main-view").style("display", "")
 		d3.select("#date-span").style("display", "")
 		d3.select("#time-span").style("display", "")
 		d3.select("#route-view").style("display", "none")
+		d3.select("#play-span").style("display", "none")
 	}
 
 }
