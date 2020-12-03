@@ -22,12 +22,7 @@ Promise.all([data_fri, data_sat, data_sun, ride_name, rides,
 	let route = new Route(routes, rides[1]);
 	
 	map.drawMap();
-<<<<<<< HEAD
-
-	let route = new Route(movement, rides);
-	route.drawMap();
-	route.showPieChart();
-=======
 	// route.drawMap();
->>>>>>> d6bd4e8f1e60efc99181d6ebecb9dcdda3856f82
+
+	route.showPieChart();
 });

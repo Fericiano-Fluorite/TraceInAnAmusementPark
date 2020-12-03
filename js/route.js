@@ -122,12 +122,15 @@ class Route{
 	}
 
 	showPieChart(){
-		let width = 800;
-		let height = 400;
+		let width = 1800;
+		let height = 1400;
 		let radius = Math.min(width, height) / 2 - 10;
 	
-		let svg = d3.select("svg")
-			.attr("width", width)
+		// let svg = d3.select("#pie-view")
+		// 	.append("svg")
+		let svg = d3.select("#pie-chart-plots").append("svg");
+
+		svg.attr("width", width)
 			.attr("height", height)
 			.append("g")
 			.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
@@ -151,9 +154,6 @@ class Route{
 		// We'll log it to the console to see how it transformed the data:
 		console.log('pieData:', pieData);
 	
-		// To make SVG pie slices, we still need more information - for that,
-		// we'll create an arc generator, that takes the computed pie data, and
-		// produces SVG path strings
 		let arc = d3.arc();
 	
 		// Let's tell it how large we want it
@@ -161,14 +161,10 @@ class Route{
 		// We also need to give it an inner radius...
 		arc.innerRadius(0);
 	
-		// Let's test the arc generator, by giving it the first pie slice:
+		// first pie slice:
 		console.log('first arc:', arc(pieData[0]));
 	
-		// With the pie data generator, and the arc path generator, we're
-		// finally ready to start drawing!
-	
-		// We'll want a path and a text label for each slice, so first, we'll
-		// create a group element:
+
 		let groups = svg.selectAll("g").data(pieData)
 			.enter()
 			.append("g");
@@ -178,11 +174,11 @@ class Route{
 		groups.append("path")
 			.attr("d", arc)
 			// While we're at it, let's set the color of the slice using our color scale
-			.style("fill", d => this.typeToColors[d.data.types]);
+			.style("fill", d => this.typeToColors[d.data.type]);
 	
 		// add a label
 		groups.append("text")
-			.text(d => d.data.types)
+			.text(d => d.data.type)
 			.attr("transform", d => "translate(" + arc.centroid(d) + ")")
 			.attr("dy", ".35em")
 			.style("text-anchor", "middle")
@@ -195,17 +191,7 @@ class Route{
 
 
 function routeSwitchView(){
-<<<<<<< HEAD
-	// let div = d3.selectAll(".wrapper").style("display","none");
-	if (d3.selectAll(".wrapper").style("display") == "block"){
-		let div = d3.selectAll(".wrapper").style("display","none");
-		// here should display the route view
-
-		console.log("should see pie");
-
-=======
 	let mainActive = d3.select("#main-view").style("display")
->>>>>>> d6bd4e8f1e60efc99181d6ebecb9dcdda3856f82
 
 	if (mainActive != "none"){
 		d3.select("#main-view").style("display", "none")
